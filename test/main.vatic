@@ -8,3 +8,5 @@ out y;
 out longLabel;
 out zero;
 out subtract;
+subtract = x + longLabel;
+out x;
