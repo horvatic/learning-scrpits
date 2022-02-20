@@ -2,10 +2,10 @@ package token
 
 type Token struct {
 	tokenType TokenType
-	rawVal    rune
+	rawVal    string
 }
 
-func NewToken(tokenType TokenType, rawVal rune) *Token {
+func NewToken(tokenType TokenType, rawVal string) *Token {
 	return &Token{
 		tokenType: tokenType,
 		rawVal:    rawVal,
@@ -16,7 +16,7 @@ func (t *Token) GetTokenType() TokenType {
 	return t.tokenType
 }
 
-func (t *Token) GetRawVal() rune {
+func (t *Token) GetRawVal() string {
 	return t.rawVal
 }
 
@@ -28,5 +28,17 @@ func NewEOFToken() *Token {
 func NewEndCodeBlockToken() *Token {
 	return &Token{
 		tokenType: EndCodeBlock,
+	}
+}
+
+func NewEqualToken() *Token {
+	return &Token{
+		tokenType: Equal,
+	}
+}
+
+func NewOutToken() *Token {
+	return &Token{
+		tokenType: Out,
 	}
 }

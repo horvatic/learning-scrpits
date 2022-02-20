@@ -1,6 +1,10 @@
-20 + 50 + 5;
-4+80;
-//5+ 3+ 4+ 5+2+ 2+ 4+ 6 + 3232+ 232+ 32+ 0+ 1;
-//10 -5;
-20-5+6-2+20-4554+3593;
-1+3;
+int zero;
+int x = 20;
+int y = 3+4;
+int longLabel = 3 + 4 - 1;
+int subtract = 10-1;
+out x;
+out y;
+out longLabel;
+out zero;
+out subtract;

@@ -9,5 +9,6 @@ import (
 func main() {
 	path := os.Args[1]
 
-	interpreter.Interpret(path)
+	interpret := interpreter.NewInterpreter(interpreter.NewDataStore())
+	interpret.Interpret(path)
 }
