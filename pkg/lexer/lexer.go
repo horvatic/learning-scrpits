@@ -22,15 +22,22 @@ func BuildTokens(input string) []*token.Token {
 	}
 
 	for scanner.Scan() {
-		for _, c := range scanner.Text() {
-			if c == '+' {
-				tokens = append(tokens, token.NewToken(token.Plus, c))
-			} else if c == '-' {
-				tokens = append(tokens, token.NewToken(token.Subtract, c))
-			} else if isNum(c) {
-				tokens = append(tokens, token.NewToken(token.Int, c))
-			} else if c == ';' {
+		line := []rune(scanner.Text())
+		for i := 0; i < len(line); i++ {
+			if line[i] == '+' {
+				tokens = append(tokens, token.NewToken(token.Plus, line[i]))
+			} else if line[i] == '-' {
+				tokens = append(tokens, token.NewToken(token.Subtract, line[i]))
+			} else if isNum(line[i]) {
+				tokens = append(tokens, token.NewToken(token.Int, line[i]))
+			} else if line[i] == ';' {
 				tokens = append(tokens, token.NewEndCodeBlockToken())
+			} else if line[i] == '/' {
+				if i+1 < len(line) && line[i+1] == '/' {
+					break
+				}
+			} else if line[i] == ' ' {
+				continue
 			} else {
 				panic("undefined symbol")
 			}
