@@ -1,8 +1,6 @@
 package parser
 
 import (
-	"strconv"
-
 	"github.com/horvatic/vaticlang/pkg/lexer"
 	"github.com/horvatic/vaticlang/pkg/token"
 )
@@ -27,29 +25,25 @@ func Parse(input string) *SyntaxTree {
 func buildBlock(codeBlock []*token.Token) *Node {
 	var nodes []*Node
 	for i := 0; i < len(codeBlock); {
-		if codeBlock[i].GetTokenType() == token.Int {
+		if codeBlock[i].GetTokenType() == token.Number {
 			buildingNum := true
 			num := ""
 			for buildingNum {
 				num += string(codeBlock[i].GetRawVal())
 				i++
-				if i >= len(codeBlock) || codeBlock[i].GetTokenType() != token.Int {
+				if i >= len(codeBlock) || codeBlock[i].GetTokenType() != token.Number {
 					buildingNum = false
 				}
 			}
-			if builtInt, err := strconv.Atoi(num); err != nil {
-				panic(err)
-			} else {
-				nodes = append(nodes, BuildNode(token.Int, builtInt))
-			}
-		} else if codeBlock[i].GetTokenType() == token.Plus {
-			nodes = append(nodes, BuildNode(token.Plus, nil))
+			nodes = append(nodes, BuildNode(token.Number, num))
+		} else if codeBlock[i].GetTokenType() == token.Label {
+			nodes = append(nodes, BuildNode(token.Label, codeBlock[i].GetRawVal()))
 			i++
-		} else if codeBlock[i].GetTokenType() == token.Subtract {
-			nodes = append(nodes, BuildNode(token.Subtract, nil))
+		} else if codeBlock[i].GetTokenType() == token.Type {
+			nodes = append(nodes, BuildNode(token.Type, codeBlock[i].GetRawVal()))
 			i++
-		} else if codeBlock[i].GetTokenType() == token.EOF {
-			nodes = append(nodes, BuildNode(token.EOF, nil))
+		} else {
+			nodes = append(nodes, BuildNode(codeBlock[i].GetTokenType(), nil))
 			i++
 		}
 	}
@@ -57,10 +51,40 @@ func buildBlock(codeBlock []*token.Token) *Node {
 }
 
 func linkNodes(nodes []*Node) *Node {
+	root := nodes[0]
+	if len(nodes) == 1 {
+		return root
+	}
+	if root.tokeType == token.Type {
+		if len(nodes) == 2 {
+			if nodes[1].GetTokenType() == token.Label {
+				root.AddLeaf(nodes[1])
+			} else {
+				panic("unknown symbol")
+			}
+		} else if nodes[2].GetTokenType() == token.Equal {
+			root.AddLeaf(nodes[2])
+			nodes[2].AddLeaf(nodes[1])
+			if len(nodes) == 4 && nodes[3].GetTokenType() == token.Number {
+				nodes[2].AddLeaf(nodes[3])
+			} else {
+				nodes[2].AddLeaf(linkMathNodes(nodes[3:]))
+			}
+		} else {
+			panic("expected equals symbol")
+		}
+	} else if root.tokeType == token.Out {
+		root.AddLeaf(nodes[1])
+	}
+
+	return root
+}
+
+func linkMathNodes(nodes []*Node) *Node {
 	var root *Node
 	var nodeStore *Node
 	for i := 0; i < len(nodes); {
-		if nodes[i].tokeType == token.Int {
+		if nodes[i].tokeType == token.Number {
 			nodeStore = nodes[i]
 		} else if nodes[i].tokeType == token.Plus || nodes[i].tokeType == token.Subtract {
 			if root == nil {
@@ -75,7 +99,7 @@ func linkNodes(nodes []*Node) *Node {
 			}
 			i++
 			if i < len(nodes) {
-				if nodes[i].tokeType == token.Int {
+				if nodes[i].tokeType == token.Number {
 					nodes[i-1].AddLeaf(nodes[i])
 				}
 			}
@@ -84,6 +108,5 @@ func linkNodes(nodes []*Node) *Node {
 		}
 		i++
 	}
-
 	return root
 }

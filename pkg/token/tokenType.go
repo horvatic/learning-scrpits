@@ -9,5 +9,10 @@ const (
 	Start
 	Comments
 	EOF
-	Int
+	Number
+	Equal
+	Label
+	Type
+
+	Out
 )
