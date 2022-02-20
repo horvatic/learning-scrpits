@@ -7,6 +7,7 @@ const (
 	Subtract
 	EndCodeBlock
 	Start
+	Comments
 	EOF
 	Int
 )
