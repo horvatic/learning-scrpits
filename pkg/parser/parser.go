@@ -45,6 +45,9 @@ func buildBlock(codeBlock []*token.Token) *Node {
 		} else if codeBlock[i].GetTokenType() == token.Plus {
 			nodes = append(nodes, BuildNode(token.Plus, nil))
 			i++
+		} else if codeBlock[i].GetTokenType() == token.Subtract {
+			nodes = append(nodes, BuildNode(token.Subtract, nil))
+			i++
 		} else if codeBlock[i].GetTokenType() == token.EOF {
 			nodes = append(nodes, BuildNode(token.EOF, nil))
 			i++
@@ -59,7 +62,7 @@ func linkNodes(nodes []*Node) *Node {
 	for i := 0; i < len(nodes); {
 		if nodes[i].tokeType == token.Int {
 			nodeStore = nodes[i]
-		} else if nodes[i].tokeType == token.Plus {
+		} else if nodes[i].tokeType == token.Plus || nodes[i].tokeType == token.Subtract {
 			if root == nil {
 				root = nodes[i]
 			} else {

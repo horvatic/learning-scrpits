@@ -1,15 +1,5 @@
 package token
 
-type TokenType int64
-
-const (
-	Plus TokenType = iota
-	EndCodeBlock
-	Start
-	EOF
-	Int
-)
-
 type Token struct {
 	tokenType TokenType
 	rawVal    rune
