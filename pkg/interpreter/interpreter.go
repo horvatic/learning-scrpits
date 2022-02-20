@@ -44,8 +44,6 @@ func (interpreter *Interpreter) processNode(node *parser.Node) {
 		fmt.Println(interpreter.dataStore.GetData(context))
 	}
 
-	// if node.GetTokenType() == token.Plus || node.GetTokenType() == token.Subtract {
-	// 	//mathMode(node)
 	if node.GetTokenType() == token.EOF {
 		return
 	}
