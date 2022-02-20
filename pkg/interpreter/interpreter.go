@@ -18,6 +18,8 @@ func Interpret(input string) {
 func processNode(node *parser.Node) {
 	if node.GetTokenType() == token.Plus {
 		fmt.Println(AddMode(node))
+	} else if node.GetTokenType() == token.Subtract {
+		fmt.Println(SubtractMode(node))
 	} else if node.GetTokenType() == token.EOF {
 		return
 	}
@@ -25,11 +27,33 @@ func processNode(node *parser.Node) {
 
 func AddMode(node *parser.Node) int {
 	total := 0
-	for _, n := range node.GetLeafs() {
-		if n.GetTokenType() == token.Int {
+	for i, n := range node.GetLeafs() {
+		if i == 0 {
+			total = n.GetVal().(int)
+		} else if n.GetTokenType() == token.Int {
 			total += n.GetVal().(int)
 		} else if n.GetTokenType() == token.Plus {
 			total += AddMode(n)
+		} else if n.GetTokenType() == token.Subtract {
+			total -= SubtractMode(n)
+		}
+	}
+	return total
+}
+
+func SubtractMode(node *parser.Node) int {
+	total := 0
+	for i, n := range node.GetLeafs() {
+		if n.GetTokenType() == token.Int {
+			if i == 0 {
+				total = n.GetVal().(int)
+			} else {
+				total -= n.GetVal().(int)
+			}
+		} else if n.GetTokenType() == token.Plus {
+			total += AddMode(n)
+		} else if n.GetTokenType() == token.Subtract {
+			total -= SubtractMode(n)
 		}
 	}
 	return total

@@ -25,6 +25,8 @@ func BuildTokens(input string) []*token.Token {
 		for _, c := range scanner.Text() {
 			if c == '+' {
 				tokens = append(tokens, token.NewToken(token.Plus, c))
+			} else if c == '-' {
+				tokens = append(tokens, token.NewToken(token.Subtract, c))
 			} else if isNum(c) {
 				tokens = append(tokens, token.NewToken(token.Int, c))
 			} else if c == ';' {
