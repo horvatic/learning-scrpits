@@ -73,6 +73,25 @@ func linkNodes(nodes []*Node) *Node {
 		} else {
 			panic("expected equals symbol")
 		}
+	} else if root.tokeType == token.Label {
+		if len(nodes) == 3 {
+			if (nodes[2].GetTokenType() == token.Label || nodes[2].GetTokenType() == token.Number) && nodes[1].GetTokenType() == token.Equal {
+				root.AddLeaf(nodes[1])
+				nodes[1].AddLeaf(nodes[2])
+			} else {
+				panic("unknown symbol")
+			}
+			// } else if nodes[1].GetTokenType() == token.Equal {
+			// 	root.AddLeaf(nodes[1])
+			// 	nodes[2].AddLeaf(nodes[1])
+			// 	if len(nodes) == 4 && nodes[3].GetTokenType() == token.Number {
+			// 		nodes[2].AddLeaf(nodes[3])
+			// 	} else {
+			// 		nodes[2].AddLeaf(linkMathNodes(nodes[3:]))
+			// 	}
+		} else {
+			panic("expected equals symbol")
+		}
 	} else if root.tokeType == token.Out {
 		root.AddLeaf(nodes[1])
 	}
@@ -84,7 +103,7 @@ func linkMathNodes(nodes []*Node) *Node {
 	var root *Node
 	var nodeStore *Node
 	for i := 0; i < len(nodes); {
-		if nodes[i].tokeType == token.Number {
+		if nodes[i].tokeType == token.Number || nodes[i].tokeType == token.Label {
 			nodeStore = nodes[i]
 		} else if nodes[i].tokeType == token.Plus || nodes[i].tokeType == token.Subtract {
 			if root == nil {
@@ -99,7 +118,7 @@ func linkMathNodes(nodes []*Node) *Node {
 			}
 			i++
 			if i < len(nodes) {
-				if nodes[i].tokeType == token.Number {
+				if nodes[i].tokeType == token.Number || nodes[i].tokeType == token.Label {
 					nodes[i-1].AddLeaf(nodes[i])
 				}
 			}

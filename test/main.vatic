@@ -3,10 +3,19 @@ int x = 20;
 int y = 3+4;
 int longLabel = 3 + 4 - 1;
 int subtract = 10-1;
+
 out x;
 out y;
 out longLabel;
 out zero;
 out subtract;
-subtract = x + longLabel;
+
+//subtract = x + longLabel;
+zero = 400;
+y = x;
+
 out x;
+out y;
+out longLabel;
+out zero;
+out subtract;

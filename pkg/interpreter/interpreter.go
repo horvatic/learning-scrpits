@@ -39,6 +39,18 @@ func (interpreter *Interpreter) processNode(node *parser.Node) {
 		} else {
 			panic("unknown symbol")
 		}
+	} else if node.GetTokenType() == token.Label {
+		if node.GetLeafs()[0].GetTokenType() == token.Equal {
+			if node.GetLeafs()[0].GetLeafs()[0].GetTokenType() == token.Number {
+				interpreter.dataStore.AddData(node.GetVal().(string), node.GetLeafs()[0].GetLeafs()[0].GetVal())
+			} else if node.GetLeafs()[0].GetLeafs()[0].GetTokenType() == token.Label {
+				interpreter.dataStore.AddData(node.GetVal().(string), interpreter.dataStore.GetData(node.GetLeafs()[0].GetLeafs()[0].GetVal().(string)))
+			} else {
+				panic("unknown symbol")
+			}
+		} else {
+			panic("unknown symbol")
+		}
 	} else if node.GetTokenType() == token.Out {
 		context := node.GetLeafs()[0].GetVal().(string)
 		fmt.Println(interpreter.dataStore.GetData(context))
