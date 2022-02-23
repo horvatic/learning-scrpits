@@ -81,14 +81,13 @@ func linkNodes(nodes []*Node) *Node {
 			} else {
 				panic("unknown symbol")
 			}
-			// } else if nodes[1].GetTokenType() == token.Equal {
-			// 	root.AddLeaf(nodes[1])
-			// 	nodes[2].AddLeaf(nodes[1])
-			// 	if len(nodes) == 4 && nodes[3].GetTokenType() == token.Number {
-			// 		nodes[2].AddLeaf(nodes[3])
-			// 	} else {
-			// 		nodes[2].AddLeaf(linkMathNodes(nodes[3:]))
-			// 	}
+		} else if len(nodes) == 5 {
+			if (nodes[2].GetTokenType() == token.Label || nodes[2].GetTokenType() == token.Number) && nodes[1].GetTokenType() == token.Equal {
+				root.AddLeaf(nodes[1])
+				nodes[1].AddLeaf(linkMathNodes(nodes[2:]))
+			} else {
+				panic("unknown symbol")
+			}
 		} else {
 			panic("expected equals symbol")
 		}

@@ -10,7 +10,7 @@ out longLabel;
 out zero;
 out subtract;
 
-//subtract = x + longLabel;
+subtract = x + longLabel;
 zero = 400;
 y = x;
 
