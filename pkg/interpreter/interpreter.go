@@ -30,12 +30,26 @@ func (interpreter *Interpreter) processNode(node *parser.Node) {
 		if node.GetLeafs()[0].GetTokenType() == token.Equal {
 			context := node.GetLeafs()[0].GetLeafs()[0].GetVal().(string)
 			if isMath(node.GetLeafs()[0].GetLeafs()[1].GetTokenType()) {
-				interpreter.dataStore.AddData(context, mathMode(node.GetLeafs()[0].GetLeafs()[1]))
+				interpreter.dataStore.AddData(context, mathMode(node.GetLeafs()[0].GetLeafs()[1], interpreter.dataStore))
 			} else if node.GetLeafs()[0].GetLeafs()[1].GetTokenType() == token.Number {
 				interpreter.dataStore.AddData(context, node.GetLeafs()[0].GetLeafs()[1].GetVal())
 			}
 		} else if node.GetLeafs()[0].GetTokenType() == token.Label {
 			interpreter.dataStore.AddData(node.GetLeafs()[0].GetVal().(string), nil)
+		} else {
+			panic("unknown symbol")
+		}
+	} else if node.GetTokenType() == token.Label {
+		if node.GetLeafs()[0].GetTokenType() == token.Equal {
+			if node.GetLeafs()[0].GetLeafs()[0].GetTokenType() == token.Number {
+				interpreter.dataStore.AddData(node.GetVal().(string), node.GetLeafs()[0].GetLeafs()[0].GetVal())
+			} else if node.GetLeafs()[0].GetLeafs()[0].GetTokenType() == token.Label {
+				interpreter.dataStore.AddData(node.GetVal().(string), interpreter.dataStore.GetData(node.GetLeafs()[0].GetLeafs()[0].GetVal().(string)))
+			} else if isMath(node.GetLeafs()[0].GetLeafs()[0].GetTokenType()) {
+				interpreter.dataStore.AddData(node.GetVal().(string), mathMode(node.GetLeafs()[0].GetLeafs()[0], interpreter.dataStore))
+			} else {
+				panic("unknown symbol")
+			}
 		} else {
 			panic("unknown symbol")
 		}
