@@ -81,7 +81,7 @@ func linkNodes(nodes []*Node) *Node {
 			} else {
 				panic("unknown symbol")
 			}
-		} else if len(nodes) == 5 {
+		} else if len(nodes) >= 5 {
 			if (nodes[2].GetTokenType() == token.Label || nodes[2].GetTokenType() == token.Number) && nodes[1].GetTokenType() == token.Equal {
 				root.AddLeaf(nodes[1])
 				nodes[1].AddLeaf(linkMathNodes(nodes[2:]))
